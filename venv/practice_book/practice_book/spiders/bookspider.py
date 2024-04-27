@@ -11,7 +11,12 @@ class BookspiderSpider(scrapy.Spider):
         
         for book in books:
             yield{
-                'name' : book.css('h3 a::text').get(),
+                'name' : book.css('h3 a::attr(title)').get(),
                 'price' :book.css('.product_price .price_color::text').get(),
                 'url' : book.css('h3 a::attr(href)').get(),
             }
+        
+        next_page = response.css('li.next a ::attr(href)').get()
+
+        if next_page is not None:
+            next_page_url = 'https://books.toscrape.com/' + next_page
